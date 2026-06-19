@@ -1,36 +1,32 @@
-const admin = require("firebase-admin");
+// ==================== FIREBASE ADMIN INITIALIZATION ====================
+// This file now gracefully handles a missing serviceAccountKey.json.
+// If the key is absent, Firestore (db) will be null and API routes can
+// respond with a clear error instead of crashing the server.
 
-/**
- * CONFIGURAÇÃO DO FIREBASE
- * 
- * Para concluir a integração:
- * 1. Vá ao Console do Firebase (https://console.firebase.google.com/)
- * 2. Configurações do Projeto > Contas de Serviço
- * 3. Clique em "Gerar nova chave privada"
- * 4. Salve o arquivo JSON como "serviceAccountKey.json" na raiz deste projeto
- */
+const admin = require('firebase-admin');
+const path = require('path');
+const fs = require('fs');
 
-try {
-  const serviceAccount = require("./serviceAccountKey.json");
-
-  admin.initializeApp({
-    credential: admin.credential.cert(serviceAccount)
-  });
-
-  console.log("Firebase Admin inicializado com sucesso");
-} catch (error) {
-  console.error("Erro ao inicializar Firebase Admin:", error.message);
-  console.log("AVISO: O arquivo 'serviceAccountKey.json' não foi encontrado.");
-  console.log("O servidor continuará rodando, mas funcionalidades do Firebase falharão.");
-}
-
+// Resolve the key file relative to the project root (same folder as package.json)
+const keyPath = path.resolve(__dirname, 'serviceAccountKey.json');
 let db = null;
-try {
-  if (admin.apps.length > 0) {
+
+if (fs.existsSync(keyPath)) {
+  try {
+    const serviceAccount = require(keyPath);
+    admin.initializeApp({
+      credential: admin.credential.cert(serviceAccount)
+    });
     db = admin.firestore();
+    console.log('✅ Firebase Admin initialized successfully.');
+  } catch (error) {
+    console.error('⚠️ Failed to initialize Firebase Admin:', error);
   }
-} catch (e) {
-  console.error("Erro ao inicializar Firestore:", e.message);
+} else {
+  console.warn(
+    "⚠️ serviceAccountKey.json not found. Firestore functionality will be disabled.\n" +
+    "Place the generated key file in the project root and restart the server to enable."
+  );
 }
 
 module.exports = { admin, db };

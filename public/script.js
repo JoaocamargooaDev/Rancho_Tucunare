@@ -1,402 +1,596 @@
-// ==================== CONFIGURAÇÃO FIREBASE CLIENT ====================
-// Você deve substituir os valores abaixo pelas configurações do seu projeto no Console do Firebase
-const firebaseConfig = {
-  apiKey: "AIzaSyC1_ia95xc1nI-fQvDVfzeA9XD7BwUi39U",
-  authDomain: "ranchotucunare-2e009.firebaseapp.com",
-  projectId: "ranchotucunare-2e009",
-  storageBucket: "ranchotucunare-2e009.firebasestorage.app",
-  messagingSenderId: "161958795445",
-  appId: "1:161958795445:web:83c49eb84911f3593506fc",
-  measurementId: "G-6NCFVMBPHE"
-};
+(function () {
+  'use strict';
 
-// Inicializar Firebase (apenas se as chaves forem preenchidas)
-let app, auth, db, analytics;
-try {
-  if (firebaseConfig.apiKey !== "SUA_API_KEY") {
-    app = firebase.initializeApp(firebaseConfig);
-    auth = firebase.auth();
-    db = firebase.firestore();
-    analytics = firebase.analytics();
-    console.log("Firebase Client inicializado");
-  }
-} catch (e) {
-  console.error("Erro ao inicializar Firebase Client:", e);
-}
+  /* Evita duplicação caso o script.js seja carregado duas vezes no HTML */
+  if (window.__RANCHO_TUCUNARE_SCRIPT_LOADED__) return;
+  window.__RANCHO_TUCUNARE_SCRIPT_LOADED__ = true;
 
-document.addEventListener("DOMContentLoaded", function () {
-  const menuToggle = document.getElementById("menu-toggle");
-  const nav = document.querySelector(".nav ul");
-  const backToTopBtn = document.getElementById("back-to-top");
-  const preloader = document.getElementById("preloader");
-  const header = document.querySelector(".header");
-  const footer = document.querySelector(".footer");
-  const botaoWhatsApp = document.querySelector(".botao-whatsapp");
+  document.addEventListener('DOMContentLoaded', function () {
+    initPreloader();
+    initFormHelpers();
+    initLiquidGlass();
+    initBackToTop();
+    initSmoothNavigation();
+    initActiveMenuOnScroll();
+    initSectionReveal();
+    initFAQ();
+    initGalleryCarousel();
+    initRippleEffect();
+    initAuthTabs();
+    initParallax();
+  });
 
-  //PRELOADER
-  window.addEventListener("load", () => {
+  function initPreloader() {
+    var preloader = document.getElementById('preloader');
+
     if (!preloader) return;
 
-    botaoWhatsApp?.classList.add("hidden");
+    function hidePreloader() {
+      setTimeout(function () {
+        preloader.style.opacity = '0';
+        preloader.style.visibility = 'hidden';
+        preloader.style.pointerEvents = 'none';
+      }, 800);
+    }
 
-    setTimeout(() => {
-      preloader.style.opacity = "0";
-      botaoWhatsApp?.classList.remove("hidden");
-
-      setTimeout(() => {
-        preloader.style.display = "none";
-      }, 500);
-    }, 2000);
-  });
-
-
-  //MENU MOBILE
-  if (menuToggle) {
-    menuToggle.addEventListener("click", () => {
-      nav.classList.toggle("active");
-    });
+    if (document.readyState === 'complete') {
+      hidePreloader();
+    } else {
+      window.addEventListener('load', hidePreloader, { once: true });
+    }
   }
 
-  //SCROLL SUAVE COM OFFSET CORRETO
-  const navLinks = document.querySelectorAll(".nav a[href^='#']");
+  function initFormHelpers() {
+    var birthDate = document.getElementById('data-nascimento');
+    var year = document.getElementById('year');
 
-  navLinks.forEach((link) => {
-    link.addEventListener("click", (e) => {
-      const href = link.getAttribute("href");
+    if (birthDate) {
+      birthDate.max = new Date().toISOString().split('T')[0];
+    }
 
-      if (href && href !== "#") {
-        e.preventDefault();
+    if (year) {
+      year.textContent = new Date().getFullYear();
+    }
+  }
 
-        const target = document.querySelector(href);
-        if (target) {
-          const headerHeight = header?.offsetHeight || 80;
-          const offset = target.getBoundingClientRect().top + window.scrollY - headerHeight - 20;
+  function initLiquidGlass() {
+    var glassSelectors = [
+      '.liquid-glass',
+      '.glass-box',
+      '.gallery-glass-container',
+      '.about-glass-container',
+      '.reserva-box',
+      '.box-glass',
+      '.faq-section',
+      '.card',
+      '.reviews-box',
+      '.auth-box',
+      '.testimonials-glass'
+    ].join(',');
 
-          window.scrollTo({ 
-            top: offset, 
-            behavior: "smooth",
-            duration: 1000
-          });
+    var glassElements = Array.prototype.slice.call(
+      document.querySelectorAll(glassSelectors)
+    );
 
-          // Remove active state from all links
-          navLinks.forEach(l => l.classList.remove("active"));
-          link.classList.add("active");
-        }
+    if (!glassElements.length) return;
 
-        // Close mobile menu
-        nav.classList.remove("active");
-      }
+    glassElements.forEach(function (element) {
+      element.classList.add('liquid-glass');
     });
-  });
 
-  // EFEITO DE SOMBRA NO HEADER AO ROLAR
-  window.addEventListener("scroll", () => {
-    if (window.scrollY > 50) {
-      header?.style.setProperty("box-shadow", "0 4px 20px rgba(0, 0, 0, 0.2)");
-      header?.style.setProperty("background-color", "rgba(255, 255, 255, 0.25)");
-    } else {
-      header?.style.setProperty("box-shadow", "0 2px 10px rgba(0, 0, 0, 0.1)");
-      header?.style.setProperty("background-color", "rgba(255, 255, 255, 0.2)");
+    var ticking = false;
+
+    function clamp(value, min, max) {
+      return Math.min(Math.max(value, min), max);
     }
-  });
 
-    // BOTÃO VOLTAR AO TOPO 
-  window.addEventListener("scroll", () => {
-    if (!backToTopBtn) return;
+    function updateGlass() {
+      var viewportHeight =
+        window.innerHeight || document.documentElement.clientHeight;
 
-    if (window.scrollY > 300) {
-      backToTopBtn.classList.add("show");
-    } else {
-      backToTopBtn.classList.remove("show");
+      glassElements.forEach(function (element) {
+        var rect = element.getBoundingClientRect();
+        var center = rect.top + rect.height / 2;
+        var progress = clamp(center / viewportHeight, 0, 1);
+        var distanceFromCenter = Math.abs(progress - 0.5) * 2;
+
+        var glassX = 50 + (progress - 0.5) * 34;
+        var glassY = 8 + progress * 84;
+        var opacity = 0.22 + (1 - distanceFromCenter) * 0.28;
+        var shift = (progress - 0.5) * 22;
+
+        element.style.setProperty('--glass-x', glassX.toFixed(2) + '%');
+        element.style.setProperty('--glass-y', glassY.toFixed(2) + '%');
+        element.style.setProperty('--reflect-x', glassX.toFixed(2) + '%');
+        element.style.setProperty('--reflect-y', glassY.toFixed(2) + '%');
+        element.style.setProperty('--glass-opacity', opacity.toFixed(2));
+        element.style.setProperty('--glass-scroll', shift.toFixed(2));
+        element.style.setProperty('--glass-shift', shift.toFixed(2) + 'px');
+      });
+
+      ticking = false;
     }
-  });
 
-  if (backToTopBtn) {
-    backToTopBtn.addEventListener("click", (e) => {
-      e.preventDefault();
-      e.stopImmediatePropagation();
+    function requestUpdate() {
+      if (!ticking) {
+        window.requestAnimationFrame(updateGlass);
+        ticking = true;
+      }
+    }
+
+    updateGlass();
+
+    window.addEventListener('scroll', requestUpdate, { passive: true });
+    window.addEventListener('resize', requestUpdate);
+  }
+
+  function initBackToTop() {
+    var button = document.getElementById('back-to-top');
+
+    if (!button) return;
+
+    function toggleButton() {
+      if (window.scrollY > 300) {
+        button.classList.add('show');
+        button.style.opacity = '1';
+        button.style.visibility = 'visible';
+        button.style.pointerEvents = 'auto';
+      } else {
+        button.classList.remove('show');
+        button.style.opacity = '0';
+        button.style.visibility = 'hidden';
+        button.style.pointerEvents = 'none';
+      }
+    }
+
+    button.addEventListener('click', function (event) {
+      event.preventDefault();
 
       window.scrollTo({
         top: 0,
-        behavior: "smooth",
+        behavior: 'smooth'
+      });
+    });
+
+    toggleButton();
+
+    window.addEventListener('scroll', toggleButton, { passive: true });
+  }
+
+  function initSmoothNavigation() {
+    var links = document.querySelectorAll('a[href^="#"]');
+
+    links.forEach(function (link) {
+      link.addEventListener('click', function (event) {
+        var href = link.getAttribute('href');
+
+        if (!href || href === '#') return;
+
+        var target = document.querySelector(href);
+
+        if (!target) return;
+
+        event.preventDefault();
+
+        target.scrollIntoView({
+          behavior: 'smooth',
+          block: 'start'
+        });
       });
     });
   }
 
-  //LIGHTBOX
-  const images = document.querySelectorAll(".zoomable");
-  const lightbox = document.getElementById("lightbox");
-  const lightboxImg = document.getElementById("lightbox-img");
-  const lightboxClose = document.querySelector(".lightbox .close");
+  function initActiveMenuOnScroll() {
+    var navLinks = Array.prototype.slice.call(
+      document.querySelectorAll('.nav a[href^="#"]')
+    );
 
-  images.forEach((img) => {
-    img.addEventListener("click", () => {
-      if (!lightbox) return;
+    var sections = navLinks
+      .map(function (link) {
+        var href = link.getAttribute('href');
+        var section = href ? document.querySelector(href) : null;
 
-      lightbox.style.display = "flex";
-      lightboxImg.src = img.src;
-      lightboxImg.alt = img.alt;
-    });
-  });
+        return section
+          ? {
+              link: link,
+              section: section
+            }
+          : null;
+      })
+      .filter(Boolean);
 
-  lightboxClose?.addEventListener("click", () => {
-    lightbox.style.display = "none";
-    lightboxImg.src = "";
-  });
+    if (!sections.length) return;
 
-  lightbox?.addEventListener("click", (e) => {
-    if (e.target === lightbox) {
-      lightbox.style.display = "none";
-      lightboxImg.src = "";
-    }
-  });
+    function updateActiveLink() {
+      var currentId = '';
+      var offset = 120;
 
-  //FADE-IN SCROLL
-  const fadeElements = document.querySelectorAll(".fade-in");
-  const observerFade = new IntersectionObserver(
-    (entries) => {
-      entries.forEach((entry) => entry.isIntersecting && entry.target.classList.add("show"));
-    },
-    { threshold: 0.2 }
-  );
-  fadeElements.forEach((el) => observerFade.observe(el));
+      sections.forEach(function (item) {
+        var rect = item.section.getBoundingClientRect();
 
- 
-  // AJUSTE DE POSIÇÃO DO BOTÃO WHATSAPP
-  function ajustarPosicaoBotaoWhatsApp() {
-    if (!botaoWhatsApp || !footer) return;
-
-    const footerRect = footer.getBoundingClientRect();
-    const windowHeight = window.innerHeight;
-    const sobrepoe = windowHeight - footerRect.top;
-
-    if (sobrepoe > 0) {
-      botaoWhatsApp.style.bottom = `${sobrepoe + 20}px`;
-    } else {
-      botaoWhatsApp.style.bottom = "20px";
-    }
-  }
-
-  // Atualiza posição quando rola ou redimensiona
-  window.addEventListener("scroll", ajustarPosicaoBotaoWhatsApp);
-  window.addEventListener("resize", ajustarPosicaoBotaoWhatsApp);
-  
-  // Inicial
-  ajustarPosicaoBotaoWhatsApp();
-
-  
-  //ANIMAÇÃO LEFT/RIGHT MELHORADA
-  const sections = document.querySelectorAll("section");
-
-  sections.forEach((section, i) => {
-    section.classList.add(i % 2 === 0 ? "from-left" : "from-right");
-    // Adiciona efeito de entrada em cascata
-    section.style.animationDelay = `${i * 0.1}s`;
-  });
-
-  const observerSections = new IntersectionObserver(
-    (entries) => {
-      entries.forEach((entry) => {
-        if (entry.isIntersecting) {
-          entry.target.classList.add("visible");
-          observerSections.unobserve(entry.target);
-          
-          // Adiciona efeito aos elementos filho
-          const children = entry.target.querySelectorAll("h2, p, .glass-box, .grid-gallery, .room-grid");
-          children.forEach((child, idx) => {
-            child.style.animation = `fade-in-move 0.6s ease-out ${idx * 0.1}s forwards`;
-            child.style.opacity = "0";
-          });
+        if (rect.top <= offset && rect.bottom >= offset) {
+          currentId = item.section.id;
         }
       });
-    },
-    { threshold: 0.15 }
+
+      navLinks.forEach(function (link) {
+        var href = link.getAttribute('href');
+        var isActive = href === '#' + currentId;
+
+        link.classList.toggle('active', isActive);
+      });
+    }
+
+    updateActiveLink();
+
+    window.addEventListener('scroll', updateActiveLink, { passive: true });
+  }
+
+  function initSectionReveal() {
+    var sections = document.querySelectorAll(
+      'section, .word-image-container, [data-parallax]'
+    );
+
+    if (!sections.length) return;
+
+    if (!('IntersectionObserver' in window)) {
+      sections.forEach(function (section) {
+        section.classList.add('visible');
+      });
+
+      return;
+    }
+
+    var observer = new IntersectionObserver(
+      function (entries) {
+        entries.forEach(function (entry) {
+          if (entry.isIntersecting) {
+            entry.target.classList.add('visible');
+            observer.unobserve(entry.target);
+          }
+        });
+      },
+      {
+        threshold: 0.12,
+        rootMargin: '0px 0px -40px 0px'
+      }
+    );
+
+    sections.forEach(function (section, index) {
+      if (section.tagName && section.tagName.toLowerCase() === 'section') {
+        if (
+          !section.classList.contains('from-left') &&
+          !section.classList.contains('from-right')
+        ) {
+          section.classList.add(index % 2 === 0 ? 'from-left' : 'from-right');
+        }
+      }
+
+      observer.observe(section);
+    });
+  }
+
+  function initFAQ() {
+    var questions = document.querySelectorAll('.faq-question');
+
+    if (!questions.length) return;
+
+    function closeItem(item) {
+      var question = item.querySelector('.faq-question');
+      var answer = item.querySelector('.faq-answer');
+
+      item.classList.remove('active');
+
+      if (question) {
+        question.setAttribute('aria-expanded', 'false');
+      }
+
+      if (answer) {
+        if (answer.style.maxHeight === 'none') {
+          answer.style.maxHeight = answer.scrollHeight + 'px';
+          answer.offsetHeight;
+        }
+
+        answer.style.maxHeight = '0px';
+        answer.style.opacity = '0';
+      }
+    }
+
+    function openItem(item) {
+      var question = item.querySelector('.faq-question');
+      var answer = item.querySelector('.faq-answer');
+
+      item.classList.add('active');
+
+      if (question) {
+        question.setAttribute('aria-expanded', 'true');
+      }
+
+      if (answer) {
+        answer.style.display = 'block';
+        answer.style.opacity = '1';
+        answer.style.maxHeight = answer.scrollHeight + 80 + 'px';
+      }
+    }
+
+    questions.forEach(function (question) {
+      question.setAttribute('type', 'button');
+      question.setAttribute('aria-expanded', 'false');
+
+      var item = question.closest('.faq-item');
+      var answer = item ? item.querySelector('.faq-answer') : null;
+
+      if (answer) {
+        answer.style.display = 'block';
+        answer.style.maxHeight = '0px';
+        answer.style.opacity = '0';
+        answer.style.overflow = 'hidden';
+      }
+
+      question.addEventListener('click', function (event) {
+        event.preventDefault();
+        event.stopPropagation();
+
+        var currentItem = question.closest('.faq-item');
+
+        if (!currentItem) return;
+
+        var isOpen = currentItem.classList.contains('active');
+
+        document.querySelectorAll('.faq-item').forEach(function (itemToClose) {
+          if (itemToClose !== currentItem) {
+            closeItem(itemToClose);
+          }
+        });
+
+        if (isOpen) {
+          closeItem(currentItem);
+        } else {
+          openItem(currentItem);
+        }
+      });
+    });
+  }
+
+function initGalleryCarousel() {
+  var carousel = document.getElementById('carousel');
+  var carouselImage = document.getElementById('carousel-img');
+  var closeButton = carousel ? carousel.querySelector('.close') : null;
+  var prevButton = document.getElementById('carousel-prev');
+  var nextButton = document.getElementById('carousel-next');
+
+  if (!carousel || !carouselImage) return;
+
+  var galleryImages = Array.prototype.slice.call(
+    document.querySelectorAll('#gallery .grid-gallery img')
   );
 
-  sections.forEach((section) => observerSections.observe(section));
+  var roomImages = Array.prototype.slice.call(
+    document.querySelectorAll('#rooms .room-grid img')
+  );
 
-  // INDICADOR DE SEÇÃO ATIVA NA NAVEGAÇÃO
-  window.addEventListener("scroll", () => {
-    let current = "";
-    
-    sections.forEach((section) => {
-      const sectionTop = section.offsetTop;
-      
-      if (window.pageYOffset >= sectionTop - 150) {
-        current = section.getAttribute("id");
-      }
-    });
+  var activeImages = [];
+  var currentIndex = 0;
 
-    navLinks.forEach((link) => {
-      link.classList.remove("active");
-      if (link.getAttribute("href") === `#${current}`) {
-        link.classList.add("active");
-      }
-    });
-  });
+  function showImage(index) {
+    if (!activeImages.length) return;
 
-  //FAQ
-  const faqButtons = document.querySelectorAll(".faq-question");
-
-  faqButtons.forEach((button) => {
-    button.addEventListener("click", () => {
-      const isOpen = button.getAttribute("aria-expanded") === "true";
-      faqButtons.forEach((btn) => btn.setAttribute("aria-expanded", "false"));
-      button.setAttribute("aria-expanded", isOpen ? "false" : "true");
-    });
-  });
-
-  // ==================== AUTH TABS & FORMS ====================
-  const authTabs = document.querySelectorAll(".auth-tab");
-  const authContents = document.querySelectorAll(".auth-content");
-  const authStatus = document.getElementById("auth-status");
-  const headerLoginBtn = document.getElementById("header-login-btn");
-  const headerRegisterBtn = document.getElementById("header-register-btn");
-  const headerLogoutBtn = document.getElementById("header-logout-btn");
-  const authButtonsContainer = document.querySelector(".auth-buttons-header");
-
-  function switchAuthTab(tabName) {
-    authTabs.forEach(t => t.classList.remove("active"));
-    authContents.forEach(c => c.classList.remove("active"));
-    
-    const selectedTab = document.querySelector(`.auth-tab[data-tab="${tabName}"]`);
-    const selectedContent = document.getElementById(`${tabName}-tab`);
-    
-    if (selectedTab && selectedContent) {
-      selectedTab.classList.add("active");
-      selectedContent.classList.add("active");
+    if (index < 0) {
+      currentIndex = activeImages.length - 1;
+    } else if (index >= activeImages.length) {
+      currentIndex = 0;
+    } else {
+      currentIndex = index;
     }
+
+    var selectedImage = activeImages[currentIndex];
+
+    carouselImage.style.opacity = '0';
+
+    setTimeout(function () {
+      carouselImage.src = selectedImage.src;
+      carouselImage.alt = selectedImage.alt || 'Imagem ampliada';
+      carouselImage.style.opacity = '1';
+    }, 120);
   }
 
-  headerLoginBtn?.addEventListener("click", () => switchAuthTab("login"));
-  headerRegisterBtn?.addEventListener("click", () => switchAuthTab("register"));
+  function openCarousel(imagesGroup, index) {
+    activeImages = imagesGroup;
+    currentIndex = index;
 
-  authTabs.forEach(tab => {
-    tab.addEventListener("click", () => {
-      const targetTab = tab.getAttribute("data-tab");
-      switchAuthTab(targetTab);
+    showImage(currentIndex);
+
+    carousel.style.display = 'flex';
+    carousel.setAttribute('aria-hidden', 'false');
+    document.body.style.overflow = 'hidden';
+  }
+
+  function closeCarousel() {
+    carousel.style.display = 'none';
+    carousel.setAttribute('aria-hidden', 'true');
+    document.body.style.overflow = '';
+    activeImages = [];
+    currentIndex = 0;
+  }
+
+  function showPrevious() {
+    showImage(currentIndex - 1);
+  }
+
+  function showNext() {
+    showImage(currentIndex + 1);
+  }
+
+  galleryImages.forEach(function (image, index) {
+    image.style.cursor = 'pointer';
+
+    image.addEventListener('click', function (event) {
+      event.preventDefault();
+      event.stopPropagation();
+
+      openCarousel(galleryImages, index);
     });
   });
 
-  function showAuthStatus(message, type) {
-    if (!authStatus) return;
-    authStatus.textContent = message;
-    authStatus.className = `auth-status ${type}`;
-    authStatus.style.display = "block";
-    setTimeout(() => authStatus.style.display = "none", 5000);
-  }
+  roomImages.forEach(function (image, index) {
+    image.style.cursor = 'pointer';
 
-  // Monitorar Estado de Autenticação
-  if (auth) {
-    auth.onAuthStateChanged((user) => {
-      if (user) {
-        // Usuário logado
-        if (authButtonsContainer) authButtonsContainer.style.display = "none";
-        if (headerLogoutBtn) headerLogoutBtn.style.display = "block";
-        console.log("Usuário logado:", user.email);
-      } else {
-        // Usuário deslogado
-        if (authButtonsContainer) authButtonsContainer.style.display = "flex";
-        if (headerLogoutBtn) headerLogoutBtn.style.display = "none";
-        console.log("Usuário deslogado");
-      }
+    image.addEventListener('click', function (event) {
+      event.preventDefault();
+      event.stopPropagation();
+
+      openCarousel(roomImages, index);
+    });
+  });
+
+  if (prevButton) {
+    prevButton.addEventListener('click', function (event) {
+      event.preventDefault();
+      event.stopPropagation();
+      showPrevious();
     });
   }
 
-  // Logout
-  headerLogoutBtn?.addEventListener("click", async () => {
-    try {
-      await auth.signOut();
-      showAuthStatus("Você saiu com sucesso.", "sucesso");
-    } catch (error) {
-      console.error("Erro ao sair:", error);
+  if (nextButton) {
+    nextButton.addEventListener('click', function (event) {
+      event.preventDefault();
+      event.stopPropagation();
+      showNext();
+    });
+  }
+
+  if (closeButton) {
+    closeButton.addEventListener('click', function (event) {
+      event.preventDefault();
+      event.stopPropagation();
+      closeCarousel();
+    });
+  }
+
+  carousel.addEventListener('click', function (event) {
+    if (event.target === carousel) {
+      closeCarousel();
     }
   });
 
-  // Cadastro de Usuário
-  const registerForm = document.getElementById("register-form-user");
-  registerForm?.addEventListener("submit", async (e) => {
-    e.preventDefault();
-    if (!auth) return alert("Firebase não configurado! Preencha o firebaseConfig no script.js");
+  document.addEventListener('keydown', function (event) {
+    if (carousel.style.display !== 'flex') return;
 
-    const nome = registerForm.nome.value;
-    const email = registerForm.email.value;
-    const senha = registerForm.senha.value;
-
-    try {
-      // Criar usuário no Firebase Auth
-      const userCredential = await auth.createUserWithEmailAndPassword(email, senha);
-      const user = userCredential.user;
-
-      // Salvar dados extras no Firestore
-      await db.collection("users").doc(user.uid).set({
-        nome: nome,
-        email: email,
-        data_cadastro: new Date().toISOString()
-      });
-
-      showAuthStatus("Cadastro realizado com sucesso!", "sucesso");
-      registerForm.reset();
-    } catch (error) {
-      console.error("Erro no cadastro:", error);
-      showAuthStatus(error.message, "erro");
+    if (event.key === 'Escape') {
+      closeCarousel();
     }
-  });
 
-  // Login de Usuário
-  const loginForm = document.getElementById("login-form-user");
-  loginForm?.addEventListener("submit", async (e) => {
-    e.preventDefault();
-    if (!auth) return alert("Firebase não configurado! Preencha o firebaseConfig no script.js");
-
-    const email = loginForm.email.value;
-    const senha = loginForm.senha.value;
-
-    try {
-      await auth.signInWithEmailAndPassword(email, senha);
-      showAuthStatus("Login realizado com sucesso!", "sucesso");
-      loginForm.reset();
-      
-      setTimeout(() => {
-        window.location.hash = "#reserva";
-      }, 1000);
-      
-    } catch (error) {
-      console.error("Erro no login:", error);
-      showAuthStatus("E-mail ou senha incorretos.", "erro");
+    if (event.key === 'ArrowLeft') {
+      showPrevious();
     }
-  });
-});
 
-  //FORMULÁRIO DE RESERVA
-const form = document.querySelector(".reserva-form");
-const statusDiv = document.getElementById("form-status");
-
-if (form && statusDiv) {
-  form.addEventListener("submit", async function (event) {
-    event.preventDefault();
-
-    const data = Object.fromEntries(new FormData(form));
-
-    try {
-      const response = await fetch("/api/reserva", {
-        method: "POST",
-        headers: { "Content-Type": "application/json" },
-        body: JSON.stringify(data),
-      });
-
-      const result = await response.json();
-
-      statusDiv.textContent = result.message || "Solicitação enviada!";
-      statusDiv.classList.add("sucesso");
-      statusDiv.style.display = "block";
-      form.reset();
-
-      setTimeout(() => (statusDiv.style.display = "none"), 5000);
-    } catch (error) {
-      statusDiv.textContent = "Erro ao enviar solicitação.";
-      statusDiv.classList.add("erro");
-      statusDiv.style.display = "block";
+    if (event.key === 'ArrowRight') {
+      showNext();
     }
   });
 }
+
+  function initRippleEffect() {
+    var container = document.getElementById('ripple-container');
+
+    if (!container) {
+      container = document.createElement('div');
+      container.id = 'ripple-container';
+      document.body.appendChild(container);
+    }
+
+    document.addEventListener('click', function (event) {
+      var target = event.target;
+
+      if (
+        target.closest('input') ||
+        target.closest('textarea') ||
+        target.closest('select') ||
+        target.closest('button') ||
+        target.closest('a') ||
+        target.closest('#carousel') ||
+        target.closest('.lightbox')
+      ) {
+        return;
+      }
+
+      var ripple = document.createElement('span');
+
+      ripple.className = 'ripple';
+      ripple.style.left = event.clientX + 'px';
+      ripple.style.top = event.clientY + 'px';
+
+      container.appendChild(ripple);
+
+      setTimeout(function () {
+        ripple.remove();
+      }, 1000);
+    });
+  }
+
+  function initAuthTabs() {
+    var tabs = document.querySelectorAll('.auth-tab');
+    var contents = document.querySelectorAll('.auth-content');
+
+    if (!tabs.length || !contents.length) return;
+
+    tabs.forEach(function (tab) {
+      tab.addEventListener('click', function () {
+        var targetId =
+          tab.getAttribute('data-tab') || tab.getAttribute('data-target');
+
+        tabs.forEach(function (item) {
+          item.classList.remove('active');
+        });
+
+        contents.forEach(function (content) {
+          content.classList.remove('active');
+        });
+
+        tab.classList.add('active');
+
+        if (targetId) {
+          var target =
+            document.getElementById(targetId) ||
+            document.querySelector(targetId);
+
+          if (target) {
+            target.classList.add('active');
+          }
+        }
+      });
+    });
+  }
+
+  function initParallax() {
+    var parallaxItems = document.querySelectorAll('[data-parallax]');
+
+    if (!parallaxItems.length) return;
+
+    var ticking = false;
+
+    function updateParallax() {
+      var scrollY = window.scrollY || window.pageYOffset;
+
+      parallaxItems.forEach(function (item) {
+        var speed = parseFloat(item.getAttribute('data-parallax')) || 0.12;
+        var movement = scrollY * speed;
+
+        item.style.transform = 'translateY(' + movement.toFixed(2) + 'px)';
+      });
+
+      ticking = false;
+    }
+
+    function requestUpdate() {
+      if (!ticking) {
+        window.requestAnimationFrame(updateParallax);
+        ticking = true;
+      }
+    }
+
+    updateParallax();
+
+    window.addEventListener('scroll', requestUpdate, { passive: true });
+  }
+})();

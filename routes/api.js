@@ -94,7 +94,24 @@ router.get("/reserva/:id", async (req, res) => {
   }
 });
 
-// ROTA PUT PARA ATUALIZAR STATUS DE RESERVA
+
+// ROTA DELETE PARA APAGAR RESERVA
+router.delete("/reserva/:id", async (req, res) => {
+  const { id } = req.params;
+
+  if (!db) {
+    return res.status(500).json({ error: "Firebase não inicializado" });
+  }
+
+  try {
+    await db.collection('reservas').doc(id).delete();
+    return res.json({ message: "Reserva apagada com sucesso!" });
+  } catch (error) {
+    console.error("Erro ao apagar reserva no Firebase:", error);
+    return res.status(500).json({ error: "Erro ao apagar reserva" });
+  }
+});
+
 router.put("/reserva/:id", async (req, res) => {
   const { id } = req.params;
   const { status } = req.body;
@@ -128,7 +145,7 @@ router.post("/admin/login", async (req, res) => {
   }
 
   // Hardcoded Admin (Mantido como fallback rápido)
-  if (usuario === 'admin' && senha === 'admin') {
+  if (usuario.toLowerCase() === 'admin' && senha === 'Admin1234') {
     const token = Buffer.from(`admin_hardcoded:admin:${Date.now()}`).toString('base64');
     return res.json({
       message: "Login realizado com sucesso!",

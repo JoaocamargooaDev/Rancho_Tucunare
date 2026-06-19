@@ -1,387 +1,400 @@
-# Rancho Tucunaré - Sistema de Reservas
+# Rancho Tucunaré
 
-Sistema completo de reservas para hospedagem com interface responsiva, painel administrativo e API REST.
+Site institucional e sistema de reservas para o **Rancho Tucunaré**, com página pública responsiva, formulário de reservas, galeria de imagens, integração com Firebase Firestore e painel administrativo para gerenciamento das solicitações.
 
-## Visão Geral
+## Visão geral
 
-**Rancho Tucunaré** é um sistema de gerenciamento de reservas com:
-- Site público para fazer reservas
-- Painel administrativo para gerenciar reservas
-- API REST completa
-- Banco de dados **Firebase Firestore**
-- Interface responsiva para todos os dispositivos
+O projeto foi desenvolvido para apresentar o Rancho Tucunaré de forma profissional e permitir que visitantes consultem informações do espaço, vejam imagens, acessem localização, tirem dúvidas frequentes, entrem em contato e solicitem reservas diretamente pelo site.
 
-## Requisitos
+Além da página pública, o sistema possui uma área administrativa para acompanhar reservas, filtrar solicitações, visualizar detalhes, alterar status e exportar dados em CSV.
 
-- **Node.js** v14 ou superior
-- **Conta no Firebase** (Firestore habilitado)
-- **npm** ou **yarn**
+## Funcionalidades
 
-## Instalação Rápida (5 minutos)
+### Site público
 
-### 1. Instalar Dependências
+- Página inicial institucional com apresentação do Rancho Tucunaré.
+- Seção **Sobre Nós** com descrição do espaço.
+- Galeria de imagens com visualização ampliada em lightbox/carrossel.
+- Seção de acomodações.
+- FAQ interativo com perguntas frequentes.
+- Localização com mapa incorporado do Google Maps.
+- Depoimentos integrados via widget externo.
+- Formulário de contato integrado ao Formspree.
+- Formulário de reserva integrado à API própria do projeto.
+- Botão flutuante do WhatsApp.
+- Botão de voltar ao topo.
+- Layout responsivo para desktop, tablet e celular.
+- Estilo visual com efeito glassmorphism/liquid glass.
+
+### Sistema de reservas
+
+- Cadastro de reserva com nome, telefone, e-mail, cidade, data de nascimento, data de entrada, data de saída e mensagem opcional.
+- Validação de campos obrigatórios no backend.
+- Armazenamento das reservas no Firebase Firestore.
+- Status padrão da reserva como `pendente`.
+- Registro automático da data de criação.
+
+### Painel administrativo
+
+- Login administrativo.
+- Dashboard com total de reservas, pendentes, confirmadas e canceladas.
+- Listagem de reservas em tabela.
+- Busca por dados da reserva.
+- Filtro por status.
+- Visualização detalhada de cada reserva.
+- Alteração de status para `pendente`, `confirmada` ou `cancelada`.
+- Exclusão de reservas.
+- Exportação das reservas em CSV.
+- Feedback visual com loading e mensagens do tipo toast.
+
+## Tecnologias utilizadas
+
+### Frontend
+
+- HTML5
+- CSS3
+- JavaScript Vanilla
+- Google Fonts
+- Google Maps Embed
+- Formspree
+- Elfsight Reviews Widget
+
+### Backend
+
+- Node.js
+- Express.js
+- Firebase Admin SDK
+- Firebase Firestore
+
+### Ferramentas de desenvolvimento
+
+- npm
+- Nodemon
+- Concurrently
+- LocalTunnel
+- ESLint
+- EditorConfig
+
+## Estrutura do projeto
+
+```text
+Rancho/
+├── public/
+│   ├── index.html          # Página pública principal
+│   ├── style.css           # Estilos do site público
+│   ├── script.js           # Interações do site público
+│   ├── admin.html          # Página do painel administrativo
+│   ├── admin.css           # Estilos do painel administrativo
+│   ├── admin.js            # Lógica do painel administrativo
+│   └── img/                # Imagens, logos e ícones do site
+│
+├── routes/
+│   └── api.js              # Rotas da API de reservas e admin
+│
+├── firebase.js             # Inicialização do Firebase Admin
+├── server.js               # Servidor Express
+├── package.json            # Dependências e scripts npm
+├── package-lock.json       # Lockfile das dependências
+├── .gitignore              # Arquivos ignorados pelo Git
+├── .editorconfig           # Padronização do editor
+├── .eslintrc.json          # Configuração do ESLint
+└── README.md               # Documentação do projeto
+```
+
+## Pré-requisitos
+
+Antes de iniciar, instale:
+
+- Node.js 14 ou superior
+- npm
+- Conta no Firebase com Firestore habilitado
+
+## Instalação
+
+Clone o repositório:
+
 ```bash
-cd "Teste 2.0"
+git clone https://github.com/JoaocamargooaDev/Rancho_Tucunare.git
+```
+
+Acesse a pasta do projeto:
+
+```bash
+cd Rancho_Tucunare
+```
+
+Instale as dependências:
+
+```bash
 npm install
 ```
 
-### 2. Configurar Firebase
+## Configuração do Firebase
 
-1. Vá ao [Console do Firebase](https://console.firebase.google.com/)
-2. Crie um novo projeto ou selecione um existente.
-3. No menu lateral, vá em **Firestore Database** e clique em **Criar banco de dados**.
-4. Vá em **Configurações do Projeto** > **Contas de Serviço**.
-5. Clique em **Gerar nova chave privada**.
-6. Salve o arquivo JSON baixado como `serviceAccountKey.json` na raiz deste projeto.
-7. O sistema detectará automaticamente o arquivo e inicializará a conexão.
+O projeto usa o Firebase Admin SDK no backend para salvar e consultar reservas no Firestore.
 
-### 3. Configurar Frontend (Firebase Client)
+### 1. Criar ou acessar projeto Firebase
 
-Para que o login e cadastro funcionem na página inicial:
-1. No Console do Firebase, vá em **Configurações do Projeto** > **Geral**.
-2. Em "Seus aplicativos", clique no ícone de código (`</>`) para adicionar um Web App.
-3. Copie o objeto `firebaseConfig` gerado.
-4. Abra o arquivo `public/script.js` e cole os valores no topo do arquivo, substituindo o placeholder.
+Acesse o Console do Firebase e crie um novo projeto ou selecione um projeto existente.
 
-### 4. Iniciar Servidor
+### 2. Ativar Firestore
+
+No menu lateral do Firebase:
+
+1. Acesse **Firestore Database**.
+2. Clique em **Criar banco de dados**.
+3. Escolha o modo adequado para seu ambiente.
+4. Finalize a criação do banco.
+
+### 3. Gerar chave de serviço
+
+1. Acesse **Configurações do projeto**.
+2. Vá até **Contas de serviço**.
+3. Clique em **Gerar nova chave privada**.
+4. Baixe o arquivo JSON.
+5. Renomeie o arquivo para:
+
+```text
+serviceAccountKey.json
+```
+
+6. Coloque o arquivo na raiz do projeto, no mesmo nível de `server.js` e `package.json`.
+
+> Importante: nunca envie `serviceAccountKey.json` para o GitHub. Esse arquivo contém credenciais sensíveis do Firebase.
+
+## Como executar o projeto
+
+Para iniciar o servidor:
+
 ```bash
 npm start
 ```
 
-**Saída esperada:**
-```
-Carregando rotas /api ...
-Firebase Admin inicializado com sucesso
-Servidor funcionando em http://localhost:3000
-```
+Ou:
 
-### 4. Acessar a Aplicação
-- **Site público:** http://localhost:3000
-- **Painel admin:** http://localhost:3000/admin.html
-
-## Estrutura do Projeto
-
-```
-Teste 2.0/
-├── package.json          # Dependências e scripts
-├── server.js             # Servidor Express principal
-├── firebase.js           # Configuração do Firebase
-│
-├── routes/
-│   └── api.js            # Endpoints da API REST
-│
-├── public/
-│   ├── index.html        # Página principal
-│   ├── script.js         # JavaScript da página principal
-│   ├── style.css         # Estilos da página
-│   ├── admin.html        # Painel administrativo
-│   ├── admin.js          # Lógica do painel admin
-│   ├── admin.css         # Estilos do painel admin
-│   └── img/              # Imagens do site
-│
-├── .gitignore            # Arquivos ignorados pelo Git
-├── .eslintrc.json        # Configuração ESLint
-└── README.md             # Este arquivo
+```bash
+npm run dev
 ```
 
-## Configuração
+Por padrão, o servidor usa a porta definida em `process.env.PORT` ou a porta `3003`.
 
-### Configuração do Firebase (firebase.js)
-O arquivo `firebase.js` gerencia a inicialização do SDK. Certifique-se de que o arquivo `serviceAccountKey.json` está presente na raiz.
+Acesse no navegador:
 
-### Porta do Servidor (server.js)
-```javascript
-const port = 3000;  // Mudar se necessário
+```text
+http://localhost:3003
 ```
 
-## Banco de Dados
+Painel administrativo:
 
-### Tabelas
+```text
+http://localhost:3003/admin.html
+```
 
-#### `reserva` (11 colunas)
-| Campo | Tipo | Descrição |
-|-------|------|-----------|
-| `id` | INT | ID único (PK) |
-| `nome` | VARCHAR(255) | Nome do hóspede |
-| `telefone` | VARCHAR(20) | Telefone para contato |
-| `email` | VARCHAR(255) | Email do hóspede |
-| `cidade` | VARCHAR(255) | Cidade de origem |
-| `data_nascimento` | DATE | Data de nascimento |
-| `data_entrada` | DATE | Data de check-in |
-| `data_saida` | DATE | Data de check-out |
-| `mensagem` | TEXT | Observações/pedidos especiais |
-| `status` | ENUM | 'pendente', 'confirmada', 'cancelada' |
-| `data_criacao` | TIMESTAMP | Data de criação do registro |
+Caso a porta esteja ocupada, o servidor tenta subir automaticamente na próxima porta disponível.
 
-#### `admin` (6 colunas)
-| Campo | Tipo | Descrição |
-|-------|------|-----------|
-| `id` | INT | ID único (PK) |
-| `usuario` | VARCHAR(100) | Usuário de login (UNIQUE) |
-| `senha` | VARCHAR(255) | Senha de acesso |
-| `nome` | VARCHAR(255) | Nome completo |
-| `email` | VARCHAR(255) | Email do admin |
-| `data_criacao` | TIMESTAMP | Data de criação |
-| `ultimo_acesso` | TIMESTAMP | Último login |
+## Scripts disponíveis
 
-## API REST
+```bash
+npm start
+```
 
-### Endpoints Disponíveis
+Inicia o servidor com Node.js.
 
-#### POST `/api/reserva` (Pública)
-Criar nova reserva
+```bash
+npm run dev
+```
 
-**Request:**
+Inicia o servidor em modo de desenvolvimento.
+
+```bash
+npm run tunnel
+```
+
+Cria um túnel público com LocalTunnel na porta 3001.
+
+```bash
+npm run dev:tunnel
+```
+
+Executa o servidor e o túnel simultaneamente usando Concurrently.
+
+## Rotas da aplicação
+
+### Páginas
+
+| Rota | Descrição |
+|---|---|
+| `/` | Página pública principal |
+| `/admin.html` | Painel administrativo |
+
+### API de reservas
+
+| Método | Rota | Descrição |
+|---|---|---|
+| `POST` | `/api/reserva` | Cria uma nova reserva |
+| `GET` | `/api/reservas` | Lista todas as reservas |
+| `GET` | `/api/reserva/:id` | Retorna os detalhes de uma reserva |
+| `PUT` | `/api/reserva/:id` | Atualiza o status de uma reserva |
+| `DELETE` | `/api/reserva/:id` | Remove uma reserva |
+
+### API administrativa
+
+| Método | Rota | Descrição |
+|---|---|---|
+| `POST` | `/api/admin/login` | Realiza login administrativo |
+| `GET` | `/api/admin/verify` | Verifica token de autenticação |
+| `GET` | `/api/admin/logout` | Encerra sessão administrativa |
+
+## Exemplo de criação de reserva
+
+Endpoint:
+
+```http
+POST /api/reserva
+```
+
+Body:
+
 ```json
 {
   "nome": "João Silva",
-  "telefone": "(11) 99999-9999",
+  "telefone": "(61) 99999-9999",
   "email": "joao@email.com",
-  "cidade": "São Paulo",
-  "data_nascimento": "1990-05-15",
-  "data_entrada": "2024-03-01",
-  "data_saida": "2024-03-05",
-  "mensagem": "Gostaria de um quarto com vista"
+  "cidade": "Brasília",
+  "data_nascimento": "1995-05-10",
+  "data_entrada": "2026-07-20",
+  "data_saida": "2026-07-22",
+  "mensagem": "Gostaria de confirmar disponibilidade para o fim de semana."
 }
 ```
 
-**Response (201):**
-```json
-{ "message": "Reserva cadastrada com sucesso!" }
-```
+Resposta esperada:
 
-#### GET `/api/reservas` (Autenticada)
-Listar todas as reservas
-
-**Headers:**
-```
-Authorization: Bearer <token>
-```
-
-**Response:**
-```json
-[
-  {
-    "id": 1,
-    "nome": "João Silva",
-    "email": "joao@email.com",
-    "status": "pendente",
-    ...
-  }
-]
-```
-
-#### GET `/api/reserva/:id` (Autenticada)
-Obter detalhes de uma reserva específica
-
-#### PUT `/api/reserva/:id` (Autenticada)
-Atualizar status da reserva
-
-**Request:**
-```json
-{ "status": "confirmada" }
-```
-
-#### POST `/api/admin/login` (Pública)
-Fazer login no painel administrativo
-
-**Request:**
 ```json
 {
-  "usuario": "admin",
-  "senha": "admin123"
+  "message": "Reserva cadastrada com sucesso no Firebase!",
+  "id": "id_gerado_pelo_firestore"
 }
 ```
 
-**Response (200):**
-```json
-{
-  "message": "Login realizado com sucesso",
-  "token": "base64_encoded_token"
-}
-```
+## Modelo de dados no Firestore
 
-#### GET `/api/admin/verify` (Autenticada)
-Verificar se token é válido
+### Coleção `reservas`
 
-#### GET `/api/admin/logout` (Autenticada)
-Logout (limpa token localmente)
+| Campo | Descrição |
+|---|---|
+| `nome` | Nome completo do solicitante |
+| `telefone` | Telefone de contato |
+| `email` | E-mail do solicitante |
+| `cidade` | Cidade informada no formulário |
+| `data_nascimento` | Data de nascimento |
+| `data_entrada` | Data de entrada/check-in |
+| `data_saida` | Data de saída/check-out |
+| `mensagem` | Observações adicionais |
+| `status` | Status da reserva: `pendente`, `confirmada` ou `cancelada` |
+| `data_criacao` | Data de criação do registro |
 
-## Como Usar
+### Coleção `admins`
 
-### Para Clientes: Fazer uma Reserva
+A coleção `admins` pode ser usada para armazenar usuários administrativos com os seguintes campos:
 
-1. Acesse http://localhost:3000
-2. Navegue até "Reserve já!" ou scroll até a seção de reservas
-3. Preencha o formulário:
-   - Nome (obrigatório)
-   - Telefone (obrigatório)
-   - Email (obrigatório)
-   - Cidade
-   - Data de Nascimento
-   - Data de Entrada (obrigatório)
-   - Data de Saída (obrigatório)
-   - Mensagem/Observações
-4. Clique em "Confirmar Reserva"
-5. Aguarde confirmação (mensagem de sucesso)
-
-### Para Administrador: Gerenciar Reservas
-
-#### Acessar o Painel
-1. Acesse http://localhost:3000/admin.html
-2. Faça login com as credenciais padrão
-
-#### Funcionalidades
-- **Dashboard:** Visualiza estatísticas (Total, Pendentes, Confirmadas, Canceladas)
-- **Filtros:** Filtrar por status ou buscar por nome/email/telefone
-- **Ações:**
-  - Ver detalhes completos da reserva
-  - Confirmar reserva
-  - Cancelar reserva
-  - Reativar reserva cancelada
-- **Exportar:** Baixar todas as reservas em CSV para Excel
-- **Logout:** Sair do painel
-
-## Credenciais de Teste
-
-| Sistema | Usuário | Senha |
-|---------|---------|-------|
-| Painel Admin | admin | admin123 |
-| MySQL | rancho_user | 123456 |
-| MySQL Host | localhost | 3306 |
-
-**⚠️ IMPORTANTE:** Altere as credenciais em produção!
+| Campo | Descrição |
+|---|---|
+| `usuario` | Nome de usuário usado no login |
+| `senha` | Senha do administrador |
+| `nome` | Nome exibido no painel administrativo |
 
 ## Segurança
 
-### Melhorias Necessárias Antes de Produção
+Antes de publicar em produção, recomenda-se:
 
-Este é um sistema de demonstração. Antes de colocar em produção:
+- Remover qualquer credencial hardcoded do backend.
+- Implementar autenticação com JWT seguro.
+- Armazenar senhas com hash usando bcrypt.
+- Usar variáveis de ambiente para credenciais e configurações sensíveis.
+- Restringir CORS apenas aos domínios permitidos.
+- Configurar regras adequadas no Firebase.
+- Não versionar `serviceAccountKey.json`.
+- Não versionar `node_modules`.
+- Usar HTTPS em produção.
 
-1. **Senhas:** Implementar hash com bcrypt
-   ```javascript
-   const bcrypt = require('bcrypt');
-   const hashedPassword = await bcrypt.hash(password, 10);
-   ```
+Sugestão de `.gitignore`:
 
-2. **Autenticação:** Usar JWT ao invés de Base64
-   ```javascript
-   const jwt = require('jsonwebtoken');
-   const token = jwt.sign(payload, secret, { expiresIn: '1h' });
-   ```
-
-3. **Proteção:** 
-   - HTTPS em produção (obrigatório)
-   - CORS configurado corretamente
-   - Validação de campos no backend
-   - Rate limiting para APIs
-
-4. **Dados:**
-   - Variáveis de ambiente (.env) para credenciais
-   - SQL injection prevention (já implementado com prepared statements)
-   - Criptografia de dados sensíveis
-
-### Exemplo com .env
-```bash
-# .env
-DB_HOST=localhost
-DB_USER=rancho_user
-DB_PASSWORD=sua_senha_segura
-DB_NAME=rancho
-JWT_SECRET=sua_chave_secreta_aqui
+```gitignore
+node_modules/
+.env
+serviceAccountKey.json
+.expo/
+npm-debug.log*
+.DS_Store
 ```
+
+## Boas práticas de deploy
+
+Para publicar o projeto, você pode usar serviços compatíveis com Node.js, como:
+
+- Render
+- Railway
+- Vercel com serverless adaptations
+- Heroku
+- VPS própria
+
+Em produção, configure:
+
+- Variável `PORT`, se necessário.
+- Credenciais do Firebase via variável de ambiente ou Secret Manager.
+- Domínio personalizado.
+- HTTPS.
+- Logs de erro.
+- Backup/monitoramento do Firestore.
+
+## Possíveis melhorias futuras
+
+- Envio automático de e-mail ao receber nova reserva.
+- Confirmação automática por WhatsApp.
+- Calendário visual de disponibilidade.
+- Bloqueio de datas já reservadas.
+- Upload de fotos pelo painel administrativo.
+- Autenticação com Firebase Auth.
+- Recuperação de senha do administrador.
+- Dashboard financeiro.
+- Relatórios mensais de reservas.
+- Deploy automatizado com GitHub Actions.
 
 ## Troubleshooting
 
-### Erro: "Conexão ao banco de dados recusada"
-**Causa:** MySQL não está rodando  
-**Solução:**
-```bash
-# Verificar se MySQL está ativo
-mysql -h localhost -u root -p
+### Firebase não inicializado
 
-# Verificar credenciais em db.js
-# Confirmar que banco 'rancho' existe
-```
+Verifique se o arquivo `serviceAccountKey.json` está na raiz do projeto e se o Firestore está habilitado no Firebase.
 
-### Erro: "Tabelas não encontram"
-**Solução:** Execute novamente os comandos SQL do passo 2 da instalação
+### Porta ocupada
 
-### Erro: "Porta 3000 já está em uso"
-**Solução:** Altere a porta em `server.js` ou mate o processo
-```bash
-# Encontrar processo na porta
-netstat -ano | findstr :3000
+O servidor tenta automaticamente usar a próxima porta disponível. Verifique no terminal qual porta foi iniciada.
 
-# Matar processo (Windows)
-taskkill /PID <PID> /F
-```
+### Formulário de reserva não salva
 
-### Admin não consegue fazer login
-**Solução:** Verifique se o usuário existe no banco
-```sql
-SELECT * FROM admin WHERE usuario='admin';
-```
+Confira:
 
-### Formulário não submete
-**Solução:** Abra F12 (DevTools) e verifique o console para erros
+- Se o servidor está rodando.
+- Se o formulário está apontando para `/api/reserva`.
+- Se o Firebase foi inicializado corretamente.
+- Se os campos obrigatórios foram preenchidos.
 
-## Performance e Features
+### Painel administrativo não carrega reservas
 
-### CSS Animations
-- fade-in-move
-- glow-pulse
-- scale-pop
-- slide-in-left/right
-- neon-glow
-- cascata
-- slideDown
+Confira:
 
-### Responsividade
-- Breakpoint 480px (móvel)
-- Breakpoint 768px (tablet)
-- Breakpoint 1200px+ (desktop)
-- Funciona perfeitamente em 320px a 4K
-
-### Features Implementadas
-- Validação de campos obrigatórios
-- Mensagens de feedback ao usuário
-- Toast notifications
-- Loading overlay
-- Modal de detalhes
-- Exportar CSV
-- Dashboard com estatísticas
-- Filtros em tempo real
-- Design Glass morphism
-
-## Scripts NPM
-
-```bash
-npm start    # Inicia o servidor em modo produção
-npm run dev  # Inicia o servidor em modo desenvolvimento (mesma coisa por enquanto)
-```
-
-## Logs
-
-Todos os eventos importantes geram logs:
-- **Terminal:** Logs do servidor (Express e MySQL)
-- **Console do navegador:** Logs JavaScript (F12 > Console)
-- **Admin:** Toast notifications para feedback visual
-
-## Suporte e Bugs
-
-Se encontrar problemas:
-1. Verifique os logs no terminal
-2. Abra Developer Tools (F12) e veja o console
-3. Teste a API com Postman ou cURL
-4. Confirme que MySQL está conectado
-5. Verifique as credenciais de banco de dados
+- Se existem reservas no Firestore.
+- Se a API `/api/reservas` está respondendo.
+- Se o login administrativo foi realizado corretamente.
+- Se o console do navegador mostra erros de JavaScript.
 
 ## Licença
 
-MIT - Libre para uso pessoal e comercial
+Este projeto está licenciado sob a licença MIT.
 
-## Desenvolvido para
+## Autor
 
-**Rancho Tucunaré** - Sistema de Hospedagem  
-Criado com Node.js, Express e MySQL
+Projeto desenvolvido para **Rancho Tucunaré**.
+
+Repositório: `Rancho_Tucunare`

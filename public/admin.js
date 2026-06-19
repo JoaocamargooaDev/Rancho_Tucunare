@@ -80,9 +80,15 @@ class AdminDashboard {
       this.token = data.token;
       this.showToast('Login realizado com sucesso!', 'success');
       
-      setTimeout(() => {
-        this.showDashboard();
-      }, 500);
+      // Mostrar painel após login
+      document.getElementById('login-container').classList.remove('show');
+      document.getElementById('dashboard-container').classList.add('show');
+      // Atualizar nome do admin na UI
+      const adminName = localStorage.getItem('adminName') || 'Admin';
+      document.getElementById('admin-name').textContent = adminName;
+      // Carregar reservas
+      this.loadReservas();
+    document.getElementById('dashboard-container').scrollIntoView({ behavior: 'smooth' });
 
     } catch (error) {
       errorDiv.textContent = error.message;
@@ -215,12 +221,7 @@ class AdminDashboard {
         </td>
         <td>${this.formatDate(reserva.data_criacao)}</td>
         <td>
-          <div class="action-buttons">
-            <button class="action-btn action-btn-view" onclick="dashboard.showDetailModal('${reserva.id}')">
-              Ver
-            </button>
-          </div>
-        </td>
+          <button class="action-btn action-btn-delete" onclick="dashboard.deleteReserva('${reserva.id}')">Apagar</button>
       </tr>
     `).join('');
   }
@@ -413,6 +414,28 @@ class AdminDashboard {
       this.closeModal();
       this.loadReservas();
 
+    } catch (error) {
+      this.showToast(error.message, 'error');
+    } finally {
+      this.showLoading(false);
+    }
+  }
+
+    async deleteReserva(id) {
+    if (!confirm('Tem certeza que deseja excluir esta reserva?')) return;
+    try {
+      this.showLoading(true);
+      const response = await fetch(`${this.baseUrl}/reserva/${id}`, {
+        method: 'DELETE',
+        headers: {
+          'Authorization': `Bearer ${this.token}`
+        }
+      });
+      if (!response.ok) {
+        throw new Error('Erro ao excluir reserva');
+      }
+      this.showToast('Reserva excluída com sucesso!', 'success');
+      this.loadReservas();
     } catch (error) {
       this.showToast(error.message, 'error');
     } finally {

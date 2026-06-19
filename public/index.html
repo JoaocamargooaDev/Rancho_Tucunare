@@ -2,21 +2,23 @@
 <html lang="pt-BR">
 <head>
   <meta charset="UTF-8" />
-  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;600&family=Merriweather:wght@700&display=swap" rel="stylesheet" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
   <meta name="description" content="Rancho Tucunaré - Hospedagem charmosa e aconchegante." />
+
   <title>Rancho Tucunaré</title>
+
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;600&family=Merriweather:wght@700&display=swap" rel="stylesheet" />
   <link rel="stylesheet" href="style.css" />
+
   <script src="https://www.gstatic.com/firebasejs/10.7.1/firebase-app-compat.js"></script>
   <script src="https://www.gstatic.com/firebasejs/10.7.1/firebase-auth-compat.js"></script>
   <script src="https://www.gstatic.com/firebasejs/10.7.1/firebase-firestore-compat.js"></script>
   <script src="https://www.gstatic.com/firebasejs/10.7.1/firebase-analytics-compat.js"></script>
-  <script defer src="script.js"></script>
-  <style>
-  </style>
-</head>
-<body>
 
+  <script defer src="script.js"></script>
+</head>
+
+<body>
   <!-- PRELOADER -->
   <div id="preloader">
     <img src="img/logo.png" alt="Carregando..." />
@@ -25,40 +27,38 @@
   <!-- ONDAS -->
   <div id="ripple-container"></div>
 
-<header class="header">
-  <div class="container">
-    <div class="logo">
-      <a href="index.html" aria-label="Recarregar a página">
-        <img src="img/logo.png" alt="Rancho Tucunaré" />
-      </a>
+  <!-- HEADER -->
+  <header class="header">
+    <div class="container">
+      <div class="logo">
+        <a href="index.html" aria-label="Recarregar a página">
+          <img src="img/logo.png" alt="Rancho Tucunaré" />
+        </a>
+      </div>
+
+      <nav class="nav">
+        <ul>
+          <li><a href="#about" class="nav-link">Sobre</a></li>
+          <li><a href="#gallery" class="nav-link">Galeria</a></li>
+          <li><a href="#rooms" class="nav-link">Acomodações</a></li>
+          <li><a href="#faq" class="nav-link">Dúvidas Frequentes</a></li>
+          <li><a href="#localizacao" class="nav-link">Localização</a></li>
+          <li><a href="#testimonials" class="nav-link">Depoimentos</a></li>
+          <li><a href="#contact" class="nav-link">Contato</a></li>
+          <li><a href="#reserva" class="nav-link">Reserve já!</a></li>
+        </ul>
+      </nav>
+
+      <div class="admin-link-header">
+  <a href="admin.html" title="Painel Administrativo" aria-label="Painel de Admin" class="admin-link">
+    <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+      <rect x="3" y="11" width="18" height="11" rx="2" ry="2"></rect>
+      <path d="M7 11V7a5 5 0 0 1 10 0v4"></path>
+    </svg>
+  </a>
+</div>
     </div>
-    <nav class="nav">
-      <ul>
-        <li><a href="#about" class="nav-link">Sobre</a></li>
-        <li><a href="#gallery" class="nav-link">Galeria</a></li>
-        <li><a href="#rooms" class="nav-link">Acomodações</a></li>
-        <li><a href="#faq" class="nav-link">Dúvidas Frequentes</a></li>
-        <li><a href="#localizacao" class="nav-link">Localização</a></li>
-        <li><a href="#testimonials" class="nav-link">Depoimentos</a></li>
-        <li><a href="#contact" class="nav-link">Contato</a></li>
-        <li><a href="#reserva" class="nav-link">Reserve já!</a></li>
-        <li class="auth-buttons-header">
-          <a href="#auth" class="nav-link login-link" id="header-login-btn">Entrar</a>
-          <a href="#auth" class="nav-link register-link" id="header-register-btn">Criar Conta</a>
-        </li>
-      </ul>
-    </nav>
-    <div class="admin-link-header">
-      <a href="admin.html" title="Painel Administrativo" aria-label="Painel de Admin">
-        <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
-          <rect x="3" y="11" width="18" height="11" rx="2" ry="2"></rect>
-          <path d="M7 11V7a5 5 0 0 1 10 0v4"></path>
-        </svg>
-      </a>
-      <button id="header-logout-btn" class="nav-link logout-link" style="display: none; background: none; border: none; font-weight: bold; cursor: pointer;">Sair</button>
-    </div>
-  </div>
-</header>
+  </header>
 
   <!-- HERO -->
   <section class="hero fade-in">
@@ -68,125 +68,129 @@
     </div>
   </section>
 
-    <div style="text-align: center; margin: 1rem 0;">
-    <img src="img/rancho.png" alt="Imagem rancho" style="width: 1000; height: auto; display: inline-block;" />
+  <div style="text-align: center; margin: 1rem 0;">
+    <img src="img/rancho.png" alt="Imagem rancho" style="width: 1000px; height: auto; display: inline-block;" />
   </div>
 
   <!-- SOBRE -->
   <section id="about" class="about section fade-in">
-    <div class="container about-glass-container">
+    <div class="container box-glass liquid-glass">
       <h2>Sobre Nós</h2>
       <p>
-        O Rancho Tucunaré é o refúgio perfeito para grupos que buscam conforto, privacidade e contato com a natureza. 
-        Ideal para grupos entre 15 e 30 pessoas, nosso espaço oferece acomodações amplas e aconchegantes, áreas de lazer completas e infraestrutura pensada para proporcionar momentos inesquecíveis de descanso, confraternização e diversão. 
-        Seja para encontros familiares, retiros corporativos ou celebrações especiais, aqui você encontra um ambiente exclusivo, tranquilo e cheio de charme, onde cada detalhe foi pensado para seu conforto e bem-estar. 
+        O Rancho Tucunaré é o refúgio perfeito para grupos que buscam conforto, privacidade e contato com a natureza.
+        Ideal para grupos entre 15 e 30 pessoas, nosso espaço oferece acomodações amplas e aconchegantes, áreas de lazer completas e infraestrutura pensada para proporcionar momentos inesquecíveis de descanso, confraternização e diversão.
+        Seja para encontros familiares, retiros corporativos ou celebrações especiais, aqui você encontra um ambiente exclusivo, tranquilo e cheio de charme, onde cada detalhe foi pensado para seu conforto e bem-estar.
         Venha viver a experiência única do Rancho Tucunaré e faça parte de memórias que durarão para sempre!
       </p>
     </div>
   </section>
 
-   <div style="text-align: center; margin: 1rem 0;">
-    <img src="img/alegria.png" alt="Imagem Vem" style="width: 800px; height: auto; display: inline-block;" />
+  <div style="text-align: center; margin: 1rem 0;">
+    <img src="img/alegria.png" alt="Imagem alegria" style="width: 800px; height: auto; display: inline-block;" />
   </div>
 
   <!-- GALERIA -->
   <section id="gallery" class="gallery section fade-in">
-    <div class="container gallery-glass-container">
+    <div class="container box-glass liquid-glass">
       <h2>Galeria</h2>
+
       <div class="grid-gallery">
         <img src="img/1.avif" alt="Foto 1" class="zoomable" />
         <img src="img/8.jpg" alt="Foto 2" class="zoomable" />
         <img src="img/3.avif" alt="Foto 3" class="zoomable" />
         <img src="img/4.jpg" alt="Foto 4" class="zoomable" />
-        <img src="img/5.avif" alt="Foto 8" class="zoomable" />
-        <img src="img/6.jpg" alt="Foto 6" class="zoomable" />
-        <img src="img/7.avif" alt="Foto 7" class="zoomable" />
         <img src="img/5.avif" alt="Foto 5" class="zoomable" />
+        <img src="img/6.jpg" alt="Foto 6" class="zoomable" />
+        <img src="img/7.jpg" alt="Foto 7" class="zoomable" />
+        <img src="img/5.avif" alt="Foto 8" class="zoomable" />
       </div>
     </div>
   </section>
 
-    <div style="text-align: center; margin: 1rem 0;">
-    <img src="img/tranquilidade.png" alt="Imagem Vem" style="width: 1200px; height: auto; display: inline-block;" />
+  <div style="text-align: center; margin: 1rem 0;">
+    <img src="img/tranquilidade.png" alt="Imagem tranquilidade" style="width: 1200px; height: auto; display: inline-block;" />
+  </div>
+
+  <!-- ACOMODAÇÕES -->
+  <section id="rooms" class="rooms section fade-in">
+    <div class="container">
+      <div class="box-glass liquid-glass">
+        <h2>Acomodações</h2>
+
+        <p>Suítes espaçosas, elegantes e perfeitas para uma estadia confortável.</p>
+
+        <div class="room-grid">
+          <img src="img/q1.jpg" alt="Acomodação 1" class="zoomable" />
+          <img src="img/q2.avif" alt="Acomodação 2" class="zoomable" />
+          <img src="img/q3.avif" alt="Acomodação 3" class="zoomable" />
+          <img src="img/q4.avif" alt="Acomodação 4" class="zoomable" />
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <div style="text-align: center; margin: 1rem 0;">
+    <img src="img/diversao.png" alt="Imagem diversão" style="width: 800px; height: auto; display: inline-block;" />
   </div>
 
   <!-- FAQ -->
-  <section id="faq" class="faq-section glass-box">
-  <h2 class="section-title">DÚVIDAS FREQUENTES</h2>
+  <section id="faq" class="faq-section box-glass">
+    <h2 class="section-title">Dúvidas Frequentes</h2>
 
-  <div class="faq-item">
-    <button class="faq-question" aria-expanded="false">
-      Quais são as atividades disponíveis?
-      <span class="icon">+</span>
-    </button>
-    <div class="faq-answer">
-      No Rancho Tucunaré, a experiência vai muito além da hospedagem, é um convite ao lazer, ao conforto e à liberdade de curtir cada momento do seu jeito.
-      Localizado às margens de um belíssimo espelho d’água, o rancho conta com um píer privativo, ideal para quem deseja trazer seu barco, jet ski ou qualquer embarcação própria, com toda comodidade e segurança.  Vem pro Rancho Tucunaré.
-    </div>
-  </div>
+    <div class="faq-item">
+      <button class="faq-question" type="button" aria-expanded="false">
+        Quais são as atividades disponíveis?
+        <span class="icon">+</span>
+      </button>
 
-  <div class="faq-item">
-    <button class="faq-question" aria-expanded="false">
-      O Rancho aceita animais de estimação?
-      <span class="icon">+</span>
-    </button>
-    <div class="faq-answer">
-      Sim, aceitamos animais de pequeno porte mediante aviso prévio.
-    </div>
-  </div>
-
-  <div class="faq-item">
-    <button class="faq-question" aria-expanded="false">
-      Como faço para reservar?
-      <span class="icon">+</span>
-    </button>
-    <div class="faq-answer">
-      Você pode reservar pelo telefone ou WhatsApp, com confirmação imediata.
-    </div>
-  </div>
-</section>
-
-   <div style="text-align: center; margin: 1rem 0;">
-    <img src="img/familia.png" alt="Imagem Vem" style="width: 800px; height: auto; display: inline-block;" />
-  </div>
-
-<!-- ACOMODAÇÕES -->
-<section id="rooms" class="rooms section fade-in">
-  <div class="container">
-    <div class="glass-box">
-      <h2>ACOMODAÇÕES</h2>
-
-      <p>Suítes espaçosas, elegantes e perfeitas para uma estadia confortável.</p>
-      
-      <div class="room-grid">
-        <img src="img/q1.jpg" alt="Acomodação 1" class="zoomable" />
-        <img src="img/q2.avif" alt="Acomodação 2" class="zoomable" />
-        <img src="img/q3.avif" alt="Acomodação 3" class="zoomable" />
-        <img src="img/q4.avif" alt="Acomodação 4" class="zoomable" />
+      <div class="faq-answer">
+        No Rancho Tucunaré, a experiência vai muito além da hospedagem, é um convite ao lazer, ao conforto e à liberdade de curtir cada momento do seu jeito.
+        Localizado às margens de um belíssimo espelho d’água, o rancho conta com um píer privativo, ideal para quem deseja trazer seu barco, jet ski ou qualquer embarcação própria, com toda comodidade e segurança. Vem pro Rancho Tucunaré.
       </div>
-
     </div>
-  </div>
-</section>
 
-   <div style="text-align: center; margin: 1rem 0;">
-    <img src="img/diversao.png" alt="Imagem Vem" style="width: 800px; height: auto; display: inline-block;" />
+    <div class="faq-item">
+      <button class="faq-question" type="button" aria-expanded="false">
+        O Rancho aceita animais de estimação?
+        <span class="icon">+</span>
+      </button>
+
+      <div class="faq-answer">
+        Sim, aceitamos animais de pequeno porte mediante aviso prévio.
+      </div>
+    </div>
+
+    <div class="faq-item">
+      <button class="faq-question" type="button" aria-expanded="false">
+        Como faço para reservar?
+        <span class="icon">+</span>
+      </button>
+
+      <div class="faq-answer">
+        Você pode reservar pelo telefone ou WhatsApp, com confirmação imediata.
+      </div>
+    </div>
+  </section>
+
+  <div style="text-align: center; margin: 1rem 0;">
+    <img src="img/familia.png" alt="Imagem família" style="width: 800px; height: auto; display: inline-block;" />
   </div>
 
   <!-- LOCALIZAÇÃO -->
   <section id="localizacao" class="section mapa-section fade-in">
     <div class="container">
-      <div class="glass-box">
+      <div class="box-glass liquid-glass">
         <div class="mapa-info">
           <div class="mapa-text">
-            <strong class="location-title">LOCALIZAÇÃO EXCLUSIVA</strong>
+            <strong class="location-title">Localização Exclusiva</strong>
             <p>
               O Rancho Tucunaré fica às margens do Corumbá IV em Luziânia - GO, a poucos metros do Bali Park Resort, sendo a única e melhor opção de hospedagem no local, oferecendo ainda mais exclusividade para você e sua galera.
             </p>
           </div>
+
           <iframe
             src="https://www.google.com/maps/embed?pb=!1m18!1m12!1m3!1d3823.972113742254!2d-48.1868179!3d-16.2742981!2m3!1f0!2f0!3f0!3m2!1i1024!2i768!4f13.1!3m3!1m2!1s0x93597353c7f420b9%3A0x440f47eb2f610d1e!2sRancho%20Tucunar%C3%A9%20Goi%C3%A1s!5e0!3m2!1spt-BR!2sbr!4v1688210000000!5m2!1spt-BR!2sbr"
-            allowfullscreen=""
+            allowfullscreen
             loading="lazy"
             referrerpolicy="no-referrer-when-downgrade"
           ></iframe>
@@ -195,16 +199,17 @@
     </div>
   </section>
 
-     <div style="text-align: center; margin: 1rem 0;">
-    <img src="img/aconchego.png" alt="Imagem Vem" style="width: 800px; height: auto; display: inline-block;" />
+  <div style="text-align: center; margin: 1rem 0;">
+    <img src="img/aconchego.png" alt="Imagem aconchego" style="width: 800px; height: auto; display: inline-block;" />
   </div>
 
   <!-- DEPOIMENTOS -->
   <section id="testimonials" class="testimonials section fade-in">
     <div class="container">
-      <div class="glass-box">
+      <div class="box-glass liquid-glass testimonials-glass">
         <h2>O que nossos hóspedes dizem:</h2>
-        <div class="reviews-box">
+
+        <div class="reviews-widget">
           <script src="https://static.elfsight.com/platform/platform.js" async></script>
           <div class="elfsight-app-6529ac5b-190a-4939-b11d-1987a0389a5c" data-elfsight-app-lazy></div>
         </div>
@@ -212,118 +217,28 @@
     </div>
   </section>
 
-       <div style="text-align: center; margin: 1rem 0;">
-    <img src="img/memorias.png" alt="Imagem Vem" style="width: 800px; height: auto; display: inline-block;" />
-  </div>
-
-  <!-- ACESSO DO USUÁRIO -->
-  <section id="auth" class="section fade-in">
-    <div class="container">
-      <div class="glass-box auth-box">
-        <div class="auth-tabs">
-          <button class="auth-tab active" data-tab="login">Login</button>
-          <button class="auth-tab" data-tab="register">Cadastro</button>
-        </div>
-
-        <!-- Formulário de Login -->
-        <div id="login-tab" class="auth-content active">
-          <h2>Entrar</h2>
-          <form id="login-form-user" class="reserva-form">
-            <input type="email" name="email" placeholder="E-mail" required />
-            <input type="password" name="senha" placeholder="Senha" required />
-            <button type="submit" class="button">Entrar</button>
-          </form>
-        </div>
-
-        <!-- Formulário de Cadastro -->
-        <div id="register-tab" class="auth-content">
-          <h2>Criar Conta</h2>
-          <form id="register-form-user" class="reserva-form">
-            <input type="text" name="nome" placeholder="Nome Completo" required />
-            <input type="email" name="email" placeholder="E-mail" required />
-            <input type="password" name="senha" placeholder="Senha (mín. 6 caracteres)" required minlength="6" />
-            <button type="submit" class="button">Cadastrar</button>
-          </form>
-        </div>
-        <div id="auth-status"></div>
-      </div>
-    </div>
-  </section>
-
-  <!-- RESERVA -->
-<section id="reserva" class="section fade-in">
-  <div class="container">
-    <div class="glass-box reserva-box">
-      <h2>Reservas</h2>
-      <p class="reserva-descricao">
-        Aqui no Rancho Tucunaré alugamos para <strong>um grupo de 15 a 30 pessoas por final de semana.</strong>. <br />
-        Escolha sua data, envie seus dados e entraremos em contato para confirmar sua reserva.
-      </p>
-
-    <form
-  action="/api/reserva"
-  method="POST"
-  class="reserva-form"
->
-        <input type="hidden" name="formulario" value="reserva de final de semana" />
-
-        <div class="input-duplo">
-          <input type="text" name="nome" placeholder="Nome completo" required />
-          <input type="tel" name="telefone" placeholder="Telefone com DDD" required />
-        </div>
-
-        <div class="input-duplo">
-          <input type="email" name="email" placeholder="E-mail" required />
-          <input type="text" name="cidade" placeholder="Cidade" />
-        </div>
-
-        <div style="margin-bottom: 1rem;">
-          <label style="display: block; font-weight: 600; margin-bottom: 0.3rem;">
-            Data de Nascimento
-          </label>
-          <input type="date" name="data_nascimento" required style="width: 100%;" id="data-nascimento" />
-        </div>
-
-        <div class="input-duplo">
-          <label style="flex:1; display: flex; flex-direction: column; font-weight: 600;">
-            Data de Entrada
-            <input type="date" name="data_entrada" required />
-          </label>
-          <label style="flex:1; display: flex; flex-direction: column; font-weight: 600;">
-            Data de Saída
-            <input type="date" name="data_saida" required />
-          </label>
-        </div>
-
-        <textarea name="mensagem" placeholder="Mensagem adicional (opcional)"></textarea>
-
-        <button type="submit" class="button">Solicitar Reserva</button>
-        <div id="form-status"></div>
-      </form>
-    </div>
-  </div>
-</section>
-
- <div style="text-align: center; margin: 1rem 0;">
-    <img src="img/refugio.png" alt="Imagem refugio" style="width: 600px; height: auto; display: inline-block;" />
+  <div style="text-align: center; margin: 1rem 0;">
+    <img src="img/memorias.png" alt="Imagem memórias" style="width: 800px; height: auto; display: inline-block;" />
   </div>
 
   <!-- CONTATO -->
   <section id="contact" class="contact section fade-in">
     <div class="container">
-      <div class="glass-box">
+      <div class="box-glass liquid-glass">
         <h2>Contato</h2>
-   <form
-  id="contact-form"
-  action="https://formspree.io/f/xldlnyaq"
-  method="POST"
-  class="contact-form"
->
-  <input type="text" name="name" placeholder="Seu nome" required />
-  <input type="email" name="email" placeholder="Seu e-mail" required />
-  <textarea name="message" placeholder="Digite sua mensagem aqui!" required></textarea>
-  <button type="submit" class="button">Enviar</button>
-  <div id="form-status"></div>
+
+        <form
+          id="contact-form"
+          action="https://formspree.io/f/xldlnyaq"
+          method="POST"
+          class="contact-form"
+        >
+          <input type="text" name="name" placeholder="Seu nome" required />
+          <input type="email" name="email" placeholder="Seu e-mail" required />
+          <textarea name="message" placeholder="Digite sua mensagem aqui!" required></textarea>
+          <button type="submit" class="button">Enviar</button>
+          <div id="contact-status"></div>
+        </form>
       </div>
     </div>
   </section>
@@ -333,60 +248,134 @@
   </a>
 
   <div style="text-align: center; margin: 1rem 0;">
-    <img src="img/vem.png" alt="Imagem Vem" style="width: 600px; height: auto; display: inline-block;" />
+    <img src="img/refugio.png" alt="Imagem refúgio" style="width: 600px; height: auto; display: inline-block;" />
+  </div>
+
+  <!-- RESERVA -->
+  <section id="reserva" class="section fade-in">
+    <div class="container">
+      <div class="box-glass reserva-box liquid-glass">
+        <h2>Reservas</h2>
+
+        <p class="reserva-descricao">
+          Aqui no Rancho Tucunaré alugamos para <strong>um grupo de 15 a 30 pessoas por final de semana.</strong><br />
+          Escolha sua data, envie seus dados e entraremos em contato para confirmar sua reserva.
+        </p>
+
+        <form action="/api/reserva" method="POST" class="reserva-form reserva-contato-style">
+          <input type="hidden" name="formulario" value="reserva de final de semana" />
+
+          <input type="text" name="nome" placeholder="Nome completo" required />
+          <input type="tel" name="telefone" placeholder="Telefone com DDD" required />
+          <input type="email" name="email" placeholder="E-mail" required />
+          <input type="text" name="cidade" placeholder="Cidade" />
+
+          <label for="data-nascimento">Data de Nascimento</label>
+          <input type="date" name="data_nascimento" id="data-nascimento" required />
+
+          <div class="reserva-datas-row">
+  <div class="reserva-data-field">
+    <label for="data-entrada">Data de Entrada</label>
+    <input type="date" name="data_entrada" id="data-entrada" required />
+  </div>
+
+  <div class="reserva-data-field">
+    <label for="data-saida">Data de Saída</label>
+    <input type="date" name="data_saida" id="data-saida" required />
+  </div>
+</div>
+
+          <textarea name="mensagem" placeholder="Mensagem adicional (opcional)"></textarea>
+
+          <button type="submit" class="button">Solicitar Reserva</button>
+
+          <div id="reserva-status"></div>
+        </form>
+      </div>
+    </div>
+  </section>
+
+  <div style="text-align: center; margin: 1rem 0;">
+    <img src="img/vem.png" alt="Imagem vem" style="width: 600px; height: auto; display: inline-block;" />
   </div>
 
   <!-- FOOTER -->
-<footer class="footer">
-  <div class="container">
-    <p>© <span id="year"></span> Rancho Tucunaré Goiás - 35.574.675/0001-29</p>
-    <p>
-      <a href="tel:+5561999812019">(61) 99981-2019</a> 
-      <a href="mailto:ranchotucunare.goias@gmailcom">ranchotucunare.goias@gmailcom</a>
-    </p>
-    <div class="social-icons">
-      <a href="https://www.facebook.com/ranchotucunare.goias/?locale=pt_BR" target="_blank" rel="noopener noreferrer">
-        <img src="img/face.png" alt="Facebook" class="social-icon">
-      </a>
-      <a href="https://www.instagram.com/ranchotucunare.goias/?hl=pt" target="_blank" rel="noopener noreferrer">
-        <img src="img/insta.png" alt="Instagram" class="social-icon">
-      </a>
-      <a href="https://www.airbnb.com.br/rooms/1463838496071137935" target="_blank" rel="noopener noreferrer">
-        <img src="img/airbnb.png" alt="Airbnb" class="social-icon">
-      </a>
+  <footer class="footer">
+    <div class="container">
+      <p>© <span id="year"></span> Rancho Tucunaré Goiás - 35.574.675/0001-29</p>
+
+      <p>
+        <a href="tel:+5561999812019">(61) 99981-2019</a>
+        <a href="mailto:ranchotucunare.goias@gmail.com">ranchotucunare.goias@gmail.com</a>
+      </p>
+
+      <div class="social-icons">
+        <a href="https://www.facebook.com/ranchotucunare.goias/?locale=pt_BR" target="_blank" rel="noopener noreferrer">
+          <img src="img/face.png" alt="Facebook" class="social-icon" />
+        </a>
+
+        <a href="https://www.instagram.com/ranchotucunare.goias/?hl=pt" target="_blank" rel="noopener noreferrer">
+          <img src="img/insta.png" alt="Instagram" class="social-icon" />
+        </a>
+
+        <a href="https://www.airbnb.com.br/rooms/1463838496071137935" target="_blank" rel="noopener noreferrer">
+          <img src="img/airbnb.png" alt="Airbnb" class="social-icon" />
+        </a>
+      </div>
     </div>
-  </div>
-</footer>
+  </footer>
 
   <!-- BOTÃO VOLTAR AO TOPO -->
   <button id="back-to-top" aria-label="Voltar ao topo" title="Voltar ao topo">↑</button>
 
   <!-- LIGHTBOX -->
-  <div id="lightbox" class="lightbox" style="display:none;">
+  <div id="lightbox" class="lightbox" style="display: none;">
     <span class="close" aria-label="Fechar">&times;</span>
     <img id="lightbox-img" class="lightbox-content" alt="Imagem ampliada" />
   </div>
 
-  <!-- ÁGUA -->
+  <!-- CAROUSEL OVERLAY -->
+  <div id="carousel" class="lightbox" style="display: none;">
+    <span class="close" aria-label="Fechar">&times;</span>
+    <img id="carousel-img" class="lightbox-content" alt="Imagem do carrossel" />
+
+    <button id="carousel-prev" class="carousel-nav" type="button" aria-label="Anterior">
+      &#10094;
+    </button>
+
+    <button id="carousel-next" class="carousel-nav" type="button" aria-label="Próximo">
+      &#10095;
+    </button>
+  </div>
+
   <script>
-    // Definir data máxima de nascimento (hoje)
-    document.getElementById('data-nascimento').max = new Date().toISOString().split('T')[0];
+    const dataNascimento = document.getElementById('data-nascimento');
+    const yearElement = document.getElementById('year');
+    const rippleContainer = document.getElementById('ripple-container');
 
-    document.addEventListener('mousemove', function (e) {
-      const ripple = document.createElement('div');
-      ripple.className = 'ripple';
-      ripple.style.left = `${e.clientX}px`;
-      ripple.style.top = `${e.clientY}px`;
+    if (dataNascimento) {
+      dataNascimento.max = new Date().toISOString().split('T')[0];
+    }
 
-      document.getElementById('ripple-container').appendChild(ripple);
+    if (yearElement) {
+      yearElement.textContent = new Date().getFullYear();
+    }
 
-      setTimeout(() => {
-        ripple.remove();
-      }, 600);
-    });
+    if (rippleContainer) {
+      document.addEventListener('mousemove', function (e) {
+        const ripple = document.createElement('div');
+        ripple.className = 'ripple';
+        ripple.style.left = `${e.clientX}px`;
+        ripple.style.top = `${e.clientY}px`;
 
-    document.getElementById('year').textContent = new Date().getFullYear();
+        rippleContainer.appendChild(ripple);
+
+        setTimeout(function () {
+          ripple.remove();
+        }, 600);
+      });
+    }
   </script>
-
 </body>
 </html>
+
